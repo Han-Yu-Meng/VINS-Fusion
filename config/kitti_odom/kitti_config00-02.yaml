@@ -7,7 +7,7 @@ num_of_cam: 2
 imu_topic: ""
 image0_topic: "/leftImage"
 image1_topic: "/rightImage"
-output_path: "/home/tony-ws1/output/"
+output_path: "~/output/"
 
 cam0_calib: "cam00-02.yaml"
 cam1_calib: "cam00-02.yaml"
@@ -22,25 +22,25 @@ body_T_cam0: !!opencv-matrix
    rows: 4
    cols: 4
    dt: d
-   data: [1, 0, 0, 0,
-          0, 1, 0, 0,
-          0, 0, 1, 0,
+   data: [0, 0, 1, 0,
+          -1, 0, 0, 0,
+          0, -1, 0, 0,
           0, 0, 0, 1]
 
 body_T_cam1: !!opencv-matrix
    rows: 4
    cols: 4
    dt: d
-   data: [1, 0, 0, 0.537165718864418,
-          0, 1, 0, 0,
-          0, 0, 1, 0,
+   data: [0, 0, 1, 0,
+          -1, 0, 0, -0.537165718864418,
+          0, -1, 0, 0,
           0, 0, 0, 1]
 
 #Multiple thread support
-multiple_thread: 0
+multiple_thread: 1
 
 #feature traker paprameters
-max_cnt: 200            # max feature number in feature tracking
+max_cnt: 400            # max feature number in feature tracking
 min_dist: 30            # min distance between two features 
 freq: 10                # frequence (Hz) of publish tracking result. At least 10Hz for good estimation. If set 0, the frequence will be same as raw image 
 F_threshold: 1.0        # ransac threshold (pixel)

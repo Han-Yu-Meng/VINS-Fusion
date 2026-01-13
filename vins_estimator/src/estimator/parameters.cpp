@@ -47,31 +47,33 @@ int SHOW_TRACK;
 int FLOW_BACK;
 
 
-template <typename T>
-T readParam(ros::NodeHandle &n, std::string name)
-{
-    T ans;
-    if (n.getParam(name, ans))
-    {
-        ROS_INFO_STREAM("Loaded " << name << ": " << ans);
-    }
-    else
-    {
-        ROS_ERROR_STREAM("Failed to load " << name);
-        n.shutdown();
-    }
-    return ans;
-}
+// template <typename T>
+// T readParam(ros::NodeHandle &n, std::string name)
+// {
+//     T ans;
+//     if (n.getParam(name, ans))
+//     {
+//         // ROS_INFO_STREAM("Loaded " << name << ": " << ans);
+//     }
+//     else
+//     {
+//         // ROS_ERROR_STREAM("Failed to load " << name);
+//         n.shutdown();
+//     }
+//     return ans;
+// }
 
 void readParameters(std::string config_file)
 {
     FILE *fh = fopen(config_file.c_str(),"r");
     if(fh == NULL){
-        ROS_WARN("config_file dosen't exist; wrong config_file path");
-        ROS_BREAK();
+        // ROS_WARN("config_file dosen't exist; wrong config_file path");
+        // ROS_BREAK();
         return;          
     }
     fclose(fh);
+
+    cv::Mat cv_T;
 
     cv::FileStorage fsSettings(config_file, cv::FileStorage::READ);
     if(!fsSettings.isOpened())
@@ -82,10 +84,15 @@ void readParameters(std::string config_file)
     fsSettings["image0_topic"] >> IMAGE0_TOPIC;
     fsSettings["image1_topic"] >> IMAGE1_TOPIC;
     MAX_CNT = fsSettings["max_cnt"];
+    std::cout << "[VINS] MAX_CNT: " << MAX_CNT << std::endl;
     MIN_DIST = fsSettings["min_dist"];
+    std::cout << "[VINS] MIN_DIST: " << MIN_DIST << std::endl;
     F_THRESHOLD = fsSettings["F_threshold"];
+    std::cout << "[VINS] F_THRESHOLD: " << F_THRESHOLD << std::endl;
     SHOW_TRACK = fsSettings["show_track"];
+    std::cout << "[VINS] SHOW_TRACK: " << SHOW_TRACK << std::endl;
     FLOW_BACK = fsSettings["flow_back"];
+    std::cout << "[VINS] FLOW_BACK: " << FLOW_BACK << std::endl;
 
     MULTIPLE_THREAD = fsSettings["multiple_thread"];
 
@@ -116,7 +123,7 @@ void readParameters(std::string config_file)
     ESTIMATE_EXTRINSIC = fsSettings["estimate_extrinsic"];
     if (ESTIMATE_EXTRINSIC == 2)
     {
-        ROS_WARN("have no prior about extrinsic param, calibrate extrinsic param");
+        // ROS_WARN("have no prior about extrinsic param, calibrate extrinsic param");
         RIC.push_back(Eigen::Matrix3d::Identity());
         TIC.push_back(Eigen::Vector3d::Zero());
         EX_CALIB_RESULT_PATH = OUTPUT_FOLDER + "/extrinsic_parameter.csv";
@@ -125,13 +132,12 @@ void readParameters(std::string config_file)
     {
         if ( ESTIMATE_EXTRINSIC == 1)
         {
-            ROS_WARN(" Optimize extrinsic param around initial guess!");
+            // ROS_WARN(" Optimize extrinsic param around initial guess!");
             EX_CALIB_RESULT_PATH = OUTPUT_FOLDER + "/extrinsic_parameter.csv";
         }
         if (ESTIMATE_EXTRINSIC == 0)
-            ROS_WARN(" fix extrinsic param ");
+            // ROS_WARN(" fix extrinsic param ");
 
-        cv::Mat cv_T;
         fsSettings["body_T_cam0"] >> cv_T;
         Eigen::Matrix4d T;
         cv::cv2eigen(cv_T, T);
@@ -163,7 +169,7 @@ void readParameters(std::string config_file)
         std::string cam1Calib;
         fsSettings["cam1_calib"] >> cam1Calib;
         std::string cam1Path = configPath + "/" + cam1Calib; 
-        //printf("%s cam1 path\n", cam1Path.c_str() );
+        printf("%s cam1 path\n", cam1Path.c_str() );
         CAM_NAMES.push_back(cam1Path);
         
         cv::Mat cv_T;
@@ -180,14 +186,14 @@ void readParameters(std::string config_file)
 
     TD = fsSettings["td"];
     ESTIMATE_TD = fsSettings["estimate_td"];
-    if (ESTIMATE_TD)
-        ROS_INFO_STREAM("Unsynchronized sensors, online estimate time offset, initial td: " << TD);
-    else
-        ROS_INFO_STREAM("Synchronized sensors, fix time offset: " << TD);
+    // if (ESTIMATE_TD)
+        // ROS_INFO_STREAM("Unsynchronized sensors, online estimate time offset, initial td: " << TD);
+    // else
+        // ROS_INFO_STREAM("Synchronized sensors, fix time offset: " << TD);
 
     ROW = fsSettings["image_height"];
     COL = fsSettings["image_width"];
-    ROS_INFO("ROW: %d COL: %d ", ROW, COL);
+    printf("ROW: %d COL: %d \n", ROW, COL);
 
     if(!USE_IMU)
     {

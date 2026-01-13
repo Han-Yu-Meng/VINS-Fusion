@@ -11,8 +11,8 @@
  
 #include <thread>
 #include <mutex>
-#include <std_msgs/Header.h>
-#include <std_msgs/Float32.h>
+// #include <std_msgs/Header.h>
+// #include <std_msgs/Float32.h>
 #include <ceres/ceres.h>
 #include <unordered_map>
 #include <queue>
@@ -43,6 +43,15 @@ class Estimator
     Estimator();
     ~Estimator();
     void setParameter();
+
+    using OdometryCallback = std::function<void(double timestamp, const Eigen::Vector3d &P, const Eigen::Quaterniond &Q)>;
+
+    void setIMUPropagateCallback(OdometryCallback cb) { cb_imu_propagate_ = cb; }
+    void setOdometryCallback(OdometryCallback cb) { cb_odometry_ = cb; }  
+    
+    OdometryCallback cb_imu_propagate_;
+    OdometryCallback cb_odometry_;
+
 
     // interface
     void initFirstPose(Eigen::Vector3d p, Eigen::Matrix3d r);

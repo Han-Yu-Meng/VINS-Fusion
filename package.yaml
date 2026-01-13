@@ -1,0 +1,8 @@
+name: "vins_estimator"
+version: "0.1.0"
+description: "An optimization-based multi-sensor state estimator."
+maintainers:
+  - name: "fins"
+    email: "fins@sjtu.edu.cn"
+licenses:
+  - "GPL-3.0"
