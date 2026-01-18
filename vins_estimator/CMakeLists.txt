@@ -6,18 +6,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(OpenCV_DIR "/usr/lib/x86_64-linux-gnu/cmake/opencv4") 
 find_package(OpenCV 4.5.4 EXACT REQUIRED)
-
-message(STATUS "OpenCV_INCLUDE_DIRS: ${OpenCV_INCLUDE_DIRS}")
-message(STATUS "OpenCV_LIBS: ${OpenCV_LIBS}")
-
 find_package(Ceres REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(Sophus REQUIRED)
 find_package(OpenMP REQUIRED)
 find_package(PCL REQUIRED COMPONENTS common io filters)
-find_package(nav_msgs REQUIRED)
-find_package(sensor_msgs REQUIRED)
-find_package(geometry_msgs REQUIRED)
 
 set(CAMERA_MODELS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../camera_models)
 
@@ -80,26 +73,16 @@ target_link_libraries(vins_algo_lib
     ${PCL_LIBRARIES}
 )
 
-add_library(vins_estimator SHARED 
-    src/nodes.cpp
+fins_add_node(${PROJECT_NAME} src/nodes.cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE vins_algo_lib)
+
+fins_link_ros_dependencies(${PROJECT_NAME}
+    nav_msgs
+    sensor_msgs
+    geometry_msgs
 )
 
-target_link_libraries(vins_estimator 
-    PRIVATE 
-    vins_algo_lib
-    fins_sdk
-)
-
-foreach(msg_pkg sensor_msgs nav_msgs geometry_msgs)
-    if(TARGET ${msg_pkg}::${msg_pkg}__rosidl_typesupport_cpp)
-        target_link_libraries(vins_estimator PRIVATE ${msg_pkg}::${msg_pkg}__rosidl_typesupport_cpp)
-    else()
-        target_link_libraries(vins_estimator PRIVATE ${${msg_pkg}_LIBRARIES})
-        target_include_directories(vins_estimator PRIVATE ${${msg_pkg}_INCLUDE_DIRS})
-    endif()
-endforeach()
-
-set_target_properties(vins_estimator PROPERTIES 
+set_target_properties(${PROJECT_NAME} PROPERTIES 
     LIBRARY_OUTPUT_NAME "workspace_vins_estimator"
     POSITION_INDEPENDENT_CODE ON
 )

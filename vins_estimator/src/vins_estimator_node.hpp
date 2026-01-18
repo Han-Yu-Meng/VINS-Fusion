@@ -22,7 +22,7 @@
 
 struct ImageData {
   double timestamp_sec;
-  fins::time_stamp event_time;
+  fins::AcqTime acq_time;
   cv::Mat image;
 };
 
@@ -92,8 +92,8 @@ public:
       return;
 
     std::lock_guard<std::mutex> lock(buf_mutex_);
-    double t_sec = fins::to_seconds(msg.event_time);
-    img0_buf_.push({t_sec, msg.event_time, image.clone()});
+    double t_sec = fins::to_seconds(msg.acq_time);
+    img0_buf_.push({t_sec, msg.acq_time, image.clone()});
   }
 
   void on_right_image(const fins::Msg<cv::Mat> &msg) {
@@ -102,8 +102,8 @@ public:
       return;
 
     std::lock_guard<std::mutex> lock(buf_mutex_);
-    double t_sec = fins::to_seconds(msg.event_time);
-    img1_buf_.push({t_sec, msg.event_time, image.clone()});
+    double t_sec = fins::to_seconds(msg.acq_time);
+    img1_buf_.push({t_sec, msg.acq_time, image.clone()});
   }
 
 private:
@@ -193,7 +193,6 @@ private:
     pose_msg.pose = odom_msg.pose.pose;
     this->send<1>(pose_msg, fins::from_seconds(timestamp_sec));
 
-    // 新增 TransformStamped 发布
     geometry_msgs::msg::TransformStamped tf_msg;
     tf_msg.header = odom_msg.header;
     tf_msg.child_frame_id = odom_msg.child_frame_id;
@@ -206,7 +205,6 @@ private:
     tf_msg.transform.rotation.z = Q.z();
     this->send<2>(tf_msg, fins::from_seconds(timestamp_sec));
 
-    // 新增 Path 发布
     pose_msg.header = odom_msg.header;
     path_msg_.header = odom_msg.header;
     path_msg_.poses.push_back(pose_msg);
