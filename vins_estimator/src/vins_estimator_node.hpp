@@ -87,7 +87,7 @@ public:
   }
 
   void on_left_image(const fins::Msg<cv::Mat> &msg) {
-    cv::Mat image = *msg.data;
+    cv::Mat image = *msg;
     if (image.empty())
       return;
 
@@ -97,7 +97,7 @@ public:
   }
 
   void on_right_image(const fins::Msg<cv::Mat> &msg) {
-    cv::Mat image = *msg.data;
+    cv::Mat image = *msg;
     if (image.empty())
       return;
 
