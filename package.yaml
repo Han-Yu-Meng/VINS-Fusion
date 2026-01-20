@@ -4,5 +4,18 @@ description: "An optimization-based multi-sensor state estimator."
 maintainers:
   - name: "fins"
     email: "fins@sjtu.edu.cn"
+depends:
+  Eigen3: "3.4.0"
+  Sophus: "1.2.2"
+  Ceres: "1.14.0"
+  glog: "0.6.0"
+  OpenMP: "system"
+  
+  nav_msgs: "system"
+  sensor_msgs: "system"
+  geometry_msgs: "system"
+
+  PCL: "system"
+  OpenCV: "system"
 licenses:
   - "GPL-3.0"

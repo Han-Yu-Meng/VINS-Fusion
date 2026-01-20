@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(OpenCV_DIR "/usr/lib/x86_64-linux-gnu/cmake/opencv4") 
 find_package(OpenCV 4.5.4 EXACT REQUIRED)
+find_package(glog REQUIRED)
 find_package(Ceres REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(Sophus REQUIRED)
