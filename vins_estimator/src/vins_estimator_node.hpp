@@ -30,7 +30,7 @@ class VinsEstimatorNode : public fins::Node {
 public:
   void define() override {
     set_name("VinsEstimator");
-    set_description("VINS-Fusion Stereo Estimator (FINS Port)");
+    set_description("An optimization-based multi-sensor state estimator.");
     set_category("SLAM");
 
     register_parameter<std::string>("config_file",
@@ -48,6 +48,8 @@ public:
 
   void initialize() override {
     logger->info("Initializing VINS-Fusion Node...");
+
+    cv::setNumThreads(0);
 
     estimator.setOdometryCallback([this](double timestamp,
                                          const Eigen::Vector3d &P,
