@@ -9,7 +9,7 @@ depends:
   Sophus: "1.2.2"
   Ceres: "1.14.0"
   glog: "0.6.0"
-  gflag: "system"
+  gflags: "system"
   OpenMP: "system"
   
   nav_msgs: "system"
@@ -32,9 +32,6 @@ recipes:
           - "-DTBB=OFF"
           - "-DMINIGLOG=ON"
           - "-DCMAKE_CXX_FLAGS=-Wno-error=unused-parameter"
-  OpenCV:
-    type: "system"
-    system_pkg: "libopencv-dev=4.5.4* python3-opencv"
-
+          
 licenses:
   - "GPL-3.0"
