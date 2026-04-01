@@ -17,5 +17,22 @@ depends:
 
   PCL: "system"
   OpenCV: "system"
+
+recipes:
+  Ceres:
+    git: "https://github.com/ceres-solver/ceres-solver.git"
+    build_system: "cmake"
+    versions:
+      "1.14.0":
+        tag: "1.14.0"
+        cmake_args:
+          - "-DSUITESPARSE=OFF"
+          - "-DCMAKE_CXX_STANDARD=14"
+          - "-DTBB=OFF"
+          - "-DCMAKE_CXX_FLAGS=-Wno-error=unused-parameter"
+  OpenCV:
+    type: "system"
+    system_pkg: "libopencv-dev=4.5.4* python3-opencv"
+
 licenses:
   - "GPL-3.0"
