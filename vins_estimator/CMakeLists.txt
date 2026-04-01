@@ -4,7 +4,7 @@ project(vins_estimator)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_compile_options(-Wno-unused-parameter -Wno-unused-variable -Wno-deprecated-copy -Wno-sign-compare -Wno-unused-but-set-variable -Wno-ignored-qualifiers)
+add_compile_options(-Wno-unused-parameter -Wno-unused-variable -Wno-deprecated-copy -Wno-sign-compare -Wno-unused-but-set-variable -Wno-ignored-qualifiers -Wno-maybe-uninitialized)
 
 find_package(OpenCV REQUIRED)
 find_package(glog REQUIRED)

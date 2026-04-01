@@ -9,6 +9,7 @@ depends:
   Sophus: "1.2.2"
   Ceres: "1.14.0"
   glog: "0.6.0"
+  gflag: "system"
   OpenMP: "system"
   
   nav_msgs: "system"
