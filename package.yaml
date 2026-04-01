@@ -29,6 +29,7 @@ recipes:
           - "-DSUITESPARSE=OFF"
           - "-DCMAKE_CXX_STANDARD=14"
           - "-DTBB=OFF"
+          - "-DMINIGLOG=ON"
           - "-DCMAKE_CXX_FLAGS=-Wno-error=unused-parameter"
   OpenCV:
     type: "system"
