@@ -84,8 +84,3 @@ fins_link_ros_dependencies(${PROJECT_NAME}
     sensor_msgs
     geometry_msgs
 )
-
-set_target_properties(${PROJECT_NAME} PROPERTIES 
-    LIBRARY_OUTPUT_NAME "workspace_vins_estimator"
-    POSITION_INDEPENDENT_CODE ON
-)
