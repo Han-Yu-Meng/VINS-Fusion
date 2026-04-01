@@ -35,6 +35,7 @@ target_include_directories(camera_models PUBLIC
     ${CAMERA_MODELS_DIR}/include
     ${EIGEN3_INCLUDE_DIRS}
     ${OpenCV_INCLUDE_DIRS}
+    ${CERES_INCLUDE_DIRS}
 )
 
 add_library(vins_algo_lib STATIC
