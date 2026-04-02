@@ -6,7 +6,7 @@ maintainers:
     email: "fins@sjtu.edu.cn"
 depends:
   Eigen3: "3.4.0"
-  Sophus: "1.2.2"
+  Sophus: "1.22.4"
   Ceres: "1.14.0"
   glog: "0.6.0"
   gflags: "system"
@@ -31,6 +31,8 @@ recipes:
           - "-DCMAKE_CXX_STANDARD=14"
           - "-DTBB=OFF"
           - "-DMINIGLOG=ON"
+          - "-DBUILD_TESTING=OFF"
+          - "-DBUILD_EXAMPLES=OFF"
           - "-DCMAKE_CXX_FLAGS=-Wno-error=unused-parameter"
           
 licenses:
