@@ -36,14 +36,14 @@ public:
     register_parameter<std::string>("config_file",
                                     &VinsEstimatorNode::on_config_update, "");
 
-    register_input<0, cv::Mat>("left", &VinsEstimatorNode::on_left_image);
+    register_input<cv::Mat>("left", &VinsEstimatorNode::on_left_image);
 
-    register_input<1, cv::Mat>("right", &VinsEstimatorNode::on_right_image);
+    register_input<cv::Mat>("right", &VinsEstimatorNode::on_right_image);
 
-    register_output<0, nav_msgs::msg::Odometry>("odometry");
-    register_output<1, geometry_msgs::msg::PoseStamped>("pose");
-    register_output<2, geometry_msgs::msg::TransformStamped>("transform");
-    register_output<3, nav_msgs::msg::Path>("path");
+    register_output<nav_msgs::msg::Odometry>("odometry");
+    register_output<geometry_msgs::msg::PoseStamped>("pose");
+    register_output<geometry_msgs::msg::TransformStamped>("transform");
+    register_output<nav_msgs::msg::Path>("path");
   }
 
   void initialize() override {
@@ -77,8 +77,14 @@ public:
   }
 
   void run() override {}
-  void pause() override {}
-  void reset() override {}
+  void pause() override {
+    deinitialize();
+  }
+  void reset() override {
+    deinitialize();
+    path_msg_.poses.clear();
+    initialize();
+  }
 
   ~VinsEstimatorNode() { deinitialize(); }
 
@@ -88,24 +94,22 @@ public:
     estimator.setParameter();
   }
 
-  void on_left_image(const fins::Msg<cv::Mat> &msg) {
-    cv::Mat image = *msg;
+  void on_left_image(const cv::Mat &image, fins::AcqTime acq_time) {
     if (image.empty())
       return;
 
     std::lock_guard<std::mutex> lock(buf_mutex_);
-    double t_sec = fins::to_seconds(msg.acq_time);
-    img0_buf_.push({t_sec, msg.acq_time, image.clone()});
+    double t_sec = fins::to_seconds(acq_time);
+    img0_buf_.push({t_sec, acq_time, image.clone()});
   }
 
-  void on_right_image(const fins::Msg<cv::Mat> &msg) {
-    cv::Mat image = *msg;
+  void on_right_image(const cv::Mat &image, fins::AcqTime acq_time) {
     if (image.empty())
       return;
 
     std::lock_guard<std::mutex> lock(buf_mutex_);
-    double t_sec = fins::to_seconds(msg.acq_time);
-    img1_buf_.push({t_sec, msg.acq_time, image.clone()});
+    double t_sec = fins::to_seconds(acq_time);
+    img1_buf_.push({t_sec, acq_time, image.clone()});
   }
 
 private:
@@ -186,14 +190,12 @@ private:
     odom_msg.pose.pose.orientation.y = Q.y();
     odom_msg.pose.pose.orientation.z = Q.z();
 
-    // for(int i=0; i<36; i++) odom_msg.pose.covariance[i] = ...
-
-    this->send<0>(odom_msg, fins::from_seconds(timestamp_sec));
+    this->send("odom", odom_msg, fins::from_seconds(timestamp_sec));
 
     geometry_msgs::msg::PoseStamped pose_msg;
     pose_msg.header = odom_msg.header;
     pose_msg.pose = odom_msg.pose.pose;
-    this->send<1>(pose_msg, fins::from_seconds(timestamp_sec));
+    this->send("pose", pose_msg, fins::from_seconds(timestamp_sec));
 
     geometry_msgs::msg::TransformStamped tf_msg;
     tf_msg.header = odom_msg.header;
@@ -205,12 +207,12 @@ private:
     tf_msg.transform.rotation.x = Q.x();
     tf_msg.transform.rotation.y = Q.y();
     tf_msg.transform.rotation.z = Q.z();
-    this->send<2>(tf_msg, fins::from_seconds(timestamp_sec));
+    this->send("tf", tf_msg, fins::from_seconds(timestamp_sec));
 
     pose_msg.header = odom_msg.header;
     path_msg_.header = odom_msg.header;
     path_msg_.poses.push_back(pose_msg);
-    this->send<3>(path_msg_, fins::from_seconds(timestamp_sec));
+    this->send("path", path_msg_, fins::from_seconds(timestamp_sec));
   }
 
   std::string config_file_;
