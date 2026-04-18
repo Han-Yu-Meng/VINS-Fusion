@@ -8,6 +8,7 @@
  *******************************************************/
 
 #include "visualization.h"
+#include "cv_bridge.h"
 
 using namespace ros;
 using namespace Eigen;

@@ -19,7 +19,7 @@
 #include <sensor_msgs/Image.h>
 #include <sensor_msgs/PointCloud.h>
 #include <sensor_msgs/image_encodings.h>
-#include <cv_bridge/cv_bridge.h>
+#include "../../vins_estimator/src/utility/cv_bridge.h"
 
 extern camodocal::CameraPtr m_camera;
 extern Eigen::Vector3d tic;

@@ -10,6 +10,7 @@
  *******************************************************/
 
 #include "keyframe.h"
+#include "../../vins_estimator/src/utility/cv_bridge.h"
 
 template <typename Derived>
 static void reduceVector(vector<Derived> &v, vector<uchar> status)

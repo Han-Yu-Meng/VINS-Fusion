@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_compile_options(-Wno-unused-parameter -Wno-unused-variable -Wno-deprecated-copy -Wno-sign-compare -Wno-unused-but-set-variable -Wno-ignored-qualifiers -Wno-maybe-uninitialized)
 
-find_package(OpenCV REQUIRED)
+find_package(OpenCV 4.7.0 REQUIRED)
 find_package(glog REQUIRED)
 find_package(Ceres REQUIRED)
 find_package(Eigen3 REQUIRED)

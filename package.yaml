@@ -17,7 +17,7 @@ depends:
   geometry_msgs: "system"
 
   PCL: "system"
-  OpenCV: "system"
+  OpenCV: "4.7.0"
 
 recipes:
   Ceres:
