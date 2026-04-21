@@ -10,7 +10,6 @@ find_package(OpenCV REQUIRED)
 find_package(glog REQUIRED)
 find_package(Ceres REQUIRED)
 find_package(Eigen3 REQUIRED)
-find_package(Sophus REQUIRED)
 find_package(OpenMP REQUIRED)
 find_package(PCL REQUIRED COMPONENTS common io filters)
 
@@ -71,7 +70,6 @@ target_link_libraries(vins_algo_lib
     glog::glog
     gflags
     Eigen3::Eigen
-    Sophus::Sophus
     OpenMP::OpenMP_CXX
     ${PCL_LIBRARIES}
 )
